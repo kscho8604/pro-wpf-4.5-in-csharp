@@ -1,1 +1,17 @@
 D:\Code\Pro WPF\Chapter07\LocalizableApplication\bin\Debug\LocalizableApplication.exe.config
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\bin\Debug\LocalizableApplication.exe.config
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\bin\Debug\LocalizableApplication.exe
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\bin\Debug\LocalizableApplication.pdb
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.csproj.AssemblyReference.cache
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\Window1.baml
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\Window1.g.cs
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\App.g.cs
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication_MarkupCompile.cache
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.Properties.Resources.resources
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.csproj.GenerateResource.cache
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.csproj.CoreCompileInputs.cache
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.exe
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.pdb
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\bin\Debug\ko-KR\LocalizableApplication.resources.dll
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\LocalizableApplication.g.ko-KR.resources
+D:\source\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter07\LocalizableApplication\obj\Debug\ko-KR\LocalizableApplication.resources.dll

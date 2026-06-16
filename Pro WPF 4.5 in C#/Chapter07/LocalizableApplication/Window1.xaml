@@ -9,9 +9,9 @@
     <s:String x:Uid="s:String_1" x:Key="Error">Something bad happened.</s:String>
   </Window.Resources>
   
-  <StackPanel x:Uid="StackPanel_1" Margin="10">
+  <StackPanel  x:Uid="StackPanel_1" Margin="10">
     <TextBlock x:Uid="TextBlock_1" Margin="10">One line of text.</TextBlock>
-    <Button x:Uid="cmdDoSomething" Click="cmd_Click" Name="cmdDoSomething"  Margin="10" Padding="3">A button</Button>
+    <Button  x:Uid="cmdDoSomething" Click="cmd_Click" Name="cmdDoSomething"  Margin="10" Padding="3">A button</Button>
     <TextBlock x:Uid="TextBlock_2" Margin="10">This is another line of text.</TextBlock>
     
   </StackPanel>

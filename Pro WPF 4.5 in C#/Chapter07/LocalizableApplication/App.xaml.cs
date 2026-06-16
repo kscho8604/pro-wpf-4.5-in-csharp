@@ -16,8 +16,8 @@ namespace LocalizableApplication
     {
         public App()
         {
-            // Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
-
+            //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
+           
         }
 
     }
