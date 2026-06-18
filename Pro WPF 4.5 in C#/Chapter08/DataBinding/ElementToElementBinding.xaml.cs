@@ -38,7 +38,7 @@ namespace DataBinding
         {
             // Only works in two-way mode.
             lblSampleText.FontSize = 30;
-             
+
         }
 
         private void cmd_GetBoundObject(object sender, RoutedEventArgs e)
