@@ -14,7 +14,7 @@ namespace Resources
 {
     /// <summary>
     /// Interaction logic for WindowResources.xaml
-    /// </summary>
+    /// </summary> 
 
     public partial class TwoResources : System.Windows.Window
     {

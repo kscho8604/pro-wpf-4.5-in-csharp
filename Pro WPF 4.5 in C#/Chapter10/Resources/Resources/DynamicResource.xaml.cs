@@ -27,9 +27,9 @@ namespace Resources
         private void cmdChange_Click(object sender, RoutedEventArgs e)
         {
             this.Resources["TileBrush"] = new SolidColorBrush(Colors.LightBlue);
-            
+
             //ImageBrush brush = (ImageBrush)this.Resources["TileBrush"];
-            //brush.Viewport = new Rect(0, 0, 5, 5);            
+            //brush.Viewport = new Rect(0, 0, 5, 5);
         }
     }
 }
