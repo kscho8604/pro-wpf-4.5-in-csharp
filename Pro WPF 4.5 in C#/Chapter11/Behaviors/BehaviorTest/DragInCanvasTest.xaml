@@ -4,7 +4,7 @@
         Title="MainWindow"
         Height="350"
         Width="525"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:custom="clr-namespace:CustomBehaviorsLibrary;assembly=CustomBehaviorsLibrary">
     <Canvas>
         <Rectangle Canvas.Left="10"
@@ -17,18 +17,18 @@
                  Fill="Blue"
                  Width="80"
                  Height="60">
-            <i:Interaction.Behaviors>
+            <b:Interaction.Behaviors>
                 <custom:DragInCanvasBehavior></custom:DragInCanvasBehavior>
-            </i:Interaction.Behaviors>
+            </b:Interaction.Behaviors>
         </Ellipse>
         <Ellipse Canvas.Left="80"
                  Canvas.Top="70"
                  Fill="OrangeRed"
                  Width="40"
                  Height="70">
-            <i:Interaction.Behaviors>
+            <b:Interaction.Behaviors>
                 <custom:DragInCanvasBehavior></custom:DragInCanvasBehavior>
-            </i:Interaction.Behaviors>
+            </b:Interaction.Behaviors>
         </Ellipse>
     </Canvas>
 </Window>

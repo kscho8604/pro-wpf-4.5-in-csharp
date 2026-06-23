@@ -4,7 +4,7 @@
         Title="PlayMediaTest"
         Height="300"
         Width="300"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:custom="clr-namespace:CustomBehaviorsLibrary;assembly=CustomBehaviorsLibrary">
     <StackPanel x:Name="LayoutRoot"
                 Margin="10">
@@ -12,11 +12,11 @@
                 HorizontalAlignment="Left"
                 Padding="5"
                 Margin="3">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="Click">
                     <custom:PlaySoundAction Source="test.mp3"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
         </Button>
 
     </StackPanel>

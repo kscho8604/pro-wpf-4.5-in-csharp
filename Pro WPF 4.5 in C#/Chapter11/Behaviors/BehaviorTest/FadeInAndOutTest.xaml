@@ -4,7 +4,7 @@
         Title="FadeInAndOutTest"
         Height="296"
         Width="343"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:custom="clr-namespace:CustomBehaviorsLibrary;assembly=CustomBehaviorsLibrary">
     <StackPanel x:Name="LayoutRoot"
                 Margin="10">
@@ -13,19 +13,19 @@
                     Margin="3,15">
             <Button Content="Click to Fade the Label"
                     Padding="5">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="Click">
                         <custom:FadeOutAction TargetName="border"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
             </Button>
             <Button Content="Click to Show the Label"
                     Padding="5">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="Click">
                         <custom:FadeInAction TargetName="border"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
             </Button>
         </StackPanel>
         <Border x:Name="border"
