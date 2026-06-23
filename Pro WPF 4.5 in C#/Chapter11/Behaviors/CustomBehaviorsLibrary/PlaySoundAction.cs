@@ -1,28 +1,18 @@
 ﻿using System;
-using System.Net;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using i=System.Windows.Interactivity;
-using System.Windows.Interactivity;
-using System.Windows.Controls.Primitives;
+using Microsoft.Xaml.Behaviors; // 현대적인 네임스페이스만 사용
 using System.Windows;
 
 namespace CustomBehaviorsLibrary
 {
-    [DefaultTrigger(typeof(ButtonBase), typeof(i.EventTrigger), new object[] { "Click" })]
-    [DefaultTrigger(typeof(Shape), typeof(i.EventTrigger), new object[] { "MouseEnter" })]
-    [DefaultTrigger(typeof(UIElement), typeof(i.EventTrigger),
-     new object[] { "MouseLeftButtonDown" })]
+    // .NET 10 / Xaml.Behaviors 표준에 맞춰 불필요하고 에러를 유발하는 [DefaultTrigger] 속성은 제거합니다.
     public class PlaySoundAction : TriggerAction<FrameworkElement>
     {
         public static readonly DependencyProperty SourceProperty =
-  DependencyProperty.Register("Source", typeof(Uri),
-    typeof(PlaySoundAction), new PropertyMetadata(null));
+            DependencyProperty.Register("Source", typeof(Uri),
+            typeof(PlaySoundAction), new PropertyMetadata(null));
 
         public Uri Source
         {
@@ -32,16 +22,16 @@ namespace CustomBehaviorsLibrary
 
         protected override void Invoke(object args)
         {
-            // Find a place to insert the MediaElement.
+            // MediaElement를 삽입할 컨테이너를 찾습니다.
             Panel container = FindContainer();
 
             if (container != null)
             {
-                // Create and configure the MediaElement.
+                // MediaElement 생성 및 설정
                 MediaElement media = new MediaElement();
                 media.Source = this.Source;
 
-                // Hook up handlers that will clean up when playback finishes.
+                // 재생이 끝나거나 실패하면 컨테이너에서 제거하는 이벤트 연결
                 media.MediaEnded += delegate
                 {
                     container.Children.Remove(media);
@@ -52,9 +42,8 @@ namespace CustomBehaviorsLibrary
                     container.Children.Remove(media);
                 };
 
-                // Add the MediaElement and begin playback.                
+                // MediaElement를 추가하고 재생을 시작합니다.
                 container.Children.Add(media);
-                
             }
         }
 
@@ -62,7 +51,7 @@ namespace CustomBehaviorsLibrary
         {
             FrameworkElement element = this.AssociatedObject;
 
-            // Search for some sort of panel where the MediaElement can be inserted.            
+            // MediaElement를 넣을 수 있는 Panel을 찾을 때까지 Visual Tree를 거슬러 올라갑니다.
             while (element != null)
             {
                 if (element is Panel) return (Panel)element;
@@ -71,7 +60,5 @@ namespace CustomBehaviorsLibrary
             }
             return null;
         }
-
     }
-
 }

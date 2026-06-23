@@ -1,26 +1,20 @@
-﻿using System;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Interactivity;
+using Microsoft.Xaml.Behaviors; // .NET 10 표준 네임스페이스
 
 namespace CustomBehaviorsLibrary
 {
     public class DragInCanvasBehavior : Behavior<UIElement>
     {
         private Canvas canvas;
-        
+
         protected override void OnAttached()
         {
-            base.OnAttached();                       
+            base.OnAttached();
 
-            // Hook up event handlers.            
+            // 이벤트 핸들러 등록
             this.AssociatedObject.MouseLeftButtonDown += AssociatedObject_MouseLeftButtonDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
             this.AssociatedObject.MouseLeftButtonUp += AssociatedObject_MouseLeftButtonUp;
@@ -30,34 +24,30 @@ namespace CustomBehaviorsLibrary
         {
             base.OnDetaching();
 
-            // Detach event handlers.
+            // 이벤트 핸들러 해제 (메모리 누수 방지)
             this.AssociatedObject.MouseLeftButtonDown -= AssociatedObject_MouseLeftButtonDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
             this.AssociatedObject.MouseLeftButtonUp -= AssociatedObject_MouseLeftButtonUp;
         }
 
-        // Keep track of when the element is being dragged.
+        // 드래그 상태 추적
         private bool isDragging = false;
 
-        // When the element is clicked, record the exact position
-        // where the click is made.
+        // 클릭된 정확한 마우스 오프셋 저장
         private Point mouseOffset;
 
         private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Find the canvas.
+            // 부모 Canvas 찾기
             if (canvas == null) canvas = VisualTreeHelper.GetParent(this.AssociatedObject) as Canvas;
 
-            // Dragging mode begins.
+            // 드래그 모드 시작
             isDragging = true;
 
-            // Get the position of the click relative to the element
-            // (so the top-left corner of the element is (0,0).
+            // 요소 기준의 마우스 클릭 좌표 저장
             mouseOffset = e.GetPosition(AssociatedObject);
 
-            // Capture the mouse. This way you'll keep receiveing
-            // the MouseMove event even if the user jerks the mouse
-            // off the element.
+            // 마우스 캡처 (요소를 벗어나도 마우스 이벤트를 계속 수신하도록 설정)
             AssociatedObject.CaptureMouse();
         }
 
@@ -65,10 +55,10 @@ namespace CustomBehaviorsLibrary
         {
             if (isDragging)
             {
-                // Get the position of the element relative to the Canvas.
+                // Canvas 기준의 마우스 현재 위치 가져오기
                 Point point = e.GetPosition(canvas);
 
-                // Move the element.
+                // 마우스 오프셋을 계산하여 요소 위치 이동
                 AssociatedObject.SetValue(Canvas.TopProperty, point.Y - mouseOffset.Y);
                 AssociatedObject.SetValue(Canvas.LeftProperty, point.X - mouseOffset.X);
             }
@@ -78,6 +68,7 @@ namespace CustomBehaviorsLibrary
         {
             if (isDragging)
             {
+                // 마우스 캡처 해제 및 드래그 종료
                 AssociatedObject.ReleaseMouseCapture();
                 isDragging = false;
             }
