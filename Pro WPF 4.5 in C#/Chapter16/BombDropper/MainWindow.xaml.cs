@@ -66,7 +66,7 @@ namespace BombDropper
             savedCount = 0;
             secondsBetweenBombs = initialSecondsBetweenBombs;
             secondsToFall = initialSecondsToFall;
-            
+
             // Start bomb dropping events.            
             bombTimer.Interval = TimeSpan.FromSeconds(secondsBetweenBombs);
             bombTimer.Start();
@@ -80,14 +80,14 @@ namespace BombDropper
                 secondsBetweenAdjustments))
             {
                 lastAdjustmentTime = DateTime.Now;
-          
+
                 secondsBetweenBombs -= secondsBetweenBombsReduction;
                 secondsToFall -= secondsToFallReduction;
 
                 // (Technically, you should check for 0 or negative values.
                 // However, in practice these won't occur because the game will
                 // always end first.)
-                
+
                 // Set the timer to drop the next bomb at the appropriate time.
                 bombTimer.Interval = TimeSpan.FromSeconds(secondsBetweenBombs);
 
@@ -103,35 +103,41 @@ namespace BombDropper
             bomb.IsFalling = true;
 
             // Position the bomb.            
-            Random random = new Random();      
-            bomb.SetValue(Canvas.LeftProperty, 
+            Random random = new Random();
+            bomb.SetValue(Canvas.LeftProperty,
                 (double)(random.Next(0, (int)(canvasBackground.ActualWidth - 50))));
             bomb.SetValue(Canvas.TopProperty, -100.0);
 
             // Attach mouse click event (for defusing the bomb).
             bomb.MouseLeftButtonDown += bomb_MouseLeftButtonDown;
-                       
+
             // Create the animation for the falling bomb.
             Storyboard storyboard = new Storyboard();
-            DoubleAnimation fallAnimation = new DoubleAnimation();            
+            DoubleAnimation fallAnimation = new DoubleAnimation();
             fallAnimation.To = canvasBackground.ActualHeight;
             fallAnimation.Duration = TimeSpan.FromSeconds(secondsToFall);
-            
-            Storyboard.SetTarget(fallAnimation, bomb);            
+
+            Storyboard.SetTarget(fallAnimation, bomb);
             Storyboard.SetTargetProperty(fallAnimation, new PropertyPath("(Canvas.Top)"));
             storyboard.Children.Add(fallAnimation);
 
             // Create the animation for the bomb "wiggle."
-            DoubleAnimation wiggleAnimation = new DoubleAnimation();            
+            DoubleAnimation wiggleAnimation = new DoubleAnimation();
+            wiggleAnimation.From = -30; // 좌측 최대 각도
             wiggleAnimation.To = 30;
             wiggleAnimation.Duration = TimeSpan.FromSeconds(0.2);
             wiggleAnimation.RepeatBehavior = RepeatBehavior.Forever;
             wiggleAnimation.AutoReverse = true;
-                        
-            Storyboard.SetTarget(wiggleAnimation, ((TransformGroup)bomb.RenderTransform).Children[0]);
-            Storyboard.SetTargetProperty(wiggleAnimation, new PropertyPath("Angle"));
+
+            // 💡 [수정] 타겟을 객체가 아닌 'bomb' 컨트롤 자체로 지정합니다.
+            Storyboard.SetTarget(wiggleAnimation, bomb);
+
+            // 💡 [수정] 속성 경로를 RenderTransform의 첫 번째 자식(Index 0)의 Angle 속성으로 정확히 지정합니다.
+            Storyboard.SetTargetProperty(wiggleAnimation,
+                new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
+
             storyboard.Children.Add(wiggleAnimation);
-                                                
+
             // Add the bomb to the Canvas.
             canvasBackground.Children.Add(bomb);
 
@@ -141,7 +147,7 @@ namespace BombDropper
             // Configure and start the storyboard.
             storyboard.Duration = fallAnimation.Duration;
             storyboard.Completed += storyboard_Completed;
-            storyboard.Begin();            
+            storyboard.Begin();
         }
 
         private void bomb_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -161,7 +167,7 @@ namespace BombDropper
             // Send the bomb on a new trajectory by animating Canvas.Top
             // and Canvas.Left.
             storyboard.Children.Clear();
-            
+
             DoubleAnimation riseAnimation = new DoubleAnimation();
             riseAnimation.From = currentTop;
             riseAnimation.To = 0;
@@ -200,14 +206,14 @@ namespace BombDropper
         private int maxDropped = 5;
 
         private void storyboard_Completed(object sender, EventArgs e)
-        {            
+        {
             ClockGroup clockGroup = (ClockGroup)sender;
-            
+
             // Get the first animation in the storyboard, and use it to find the
             // bomb that's being animated.
-            DoubleAnimation completedAnimation = (DoubleAnimation)clockGroup.Children[0].Timeline;            
+            DoubleAnimation completedAnimation = (DoubleAnimation)clockGroup.Children[0].Timeline;
             Bomb completedBomb = (Bomb)Storyboard.GetTarget(completedAnimation);
-                        
+
             // Determine if a bomb fell or flew off the Canvas after being clicked.
             if (completedBomb.IsFalling)
             {
@@ -221,7 +227,7 @@ namespace BombDropper
             // Update the display.
             lblStatus.Text = String.Format("You have dropped {0} bombs and saved {1}.",
                 droppedCount, savedCount);
-                        
+
             // Check if it's game over.
             if (droppedCount >= maxDropped)
             {
@@ -238,23 +244,23 @@ namespace BombDropper
                     canvasBackground.Children.Remove(bomb);
                 }
                 // Empty the tracking collection.
-                storyboards.Clear();                
+                storyboards.Clear();
 
                 // Allow the user to start a new game.
                 cmdStart.IsEnabled = true;
             }
             else
-            {                
+            {
                 Storyboard storyboard = (Storyboard)clockGroup.Timeline;
                 storyboard.Stop();
-                                
+
                 storyboards.Remove(completedBomb);
                 canvasBackground.Children.Remove(completedBomb);
             }
         }
 
-        
 
-        
+
+
     }
 }
