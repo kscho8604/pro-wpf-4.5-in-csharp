@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using System.Media; // 상단에 반드시 추가
+using System.IO;
 
 namespace BombDropper
 {
@@ -24,6 +26,8 @@ namespace BombDropper
         {
             InitializeComponent();
             bombTimer.Tick += bombTimer_Tick;
+            // 매 프레임마다 파편을 움직여줄 루프 이벤트를 연결합니다.
+            CompositionTarget.Rendering += UpdateParticles;
         }
 
         private void canvasBackground_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -52,10 +56,19 @@ namespace BombDropper
 
         // Make it possible to look up a storyboard based on a bomb.
         private Dictionary<Bomb, Storyboard> storyboards = new Dictionary<Bomb, Storyboard>();
-
+        // 현재 재생 중인 사운드 플레이어들을 보관하는 리스트
+        private List<MediaPlayer> activePlayers = new List<MediaPlayer>();
         // Fires events on the user interface thread.
         private DispatcherTimer bombTimer = new DispatcherTimer();
+        // 💡 배경음악 전용 플레이어 전역 선언 (참조 유지 및 메모리 누수 방지)
+        private MediaPlayer bgmPlayer = new MediaPlayer();
+        Brush[] particleBrush = new Brush[]
+        {
+            Brushes.Orange, Brushes.Yellow, Brushes.Red
+        };
 
+        // 💡 파편들을 담아둘 리스트 생성
+        private List<ParticleInfo> particles = new List<ParticleInfo>();
         // Start the game.
         private void cmdStart_Click(object sender, RoutedEventArgs e)
         {
@@ -70,6 +83,9 @@ namespace BombDropper
             // Start bomb dropping events.            
             bombTimer.Interval = TimeSpan.FromSeconds(secondsBetweenBombs);
             bombTimer.Start();
+
+            // 💡 [추가] 게임 시작 시 배경음악 켜기
+            StartBGM();
         }
 
         // Drop a bomb.
@@ -156,6 +172,9 @@ namespace BombDropper
             Bomb bomb = (Bomb)sender;
             bomb.IsFalling = false;
 
+            // 💡 [수정] 강한 참조 연결을 끊기 위해 이벤트 핸들러를 가장 먼저 해제합니다.
+            bomb.MouseLeftButtonDown -= bomb_MouseLeftButtonDown;
+
             // Get the bomb's current position.
             Storyboard storyboard = storyboards[bomb];
             double currentTop = Canvas.GetTop(bomb);
@@ -168,35 +187,89 @@ namespace BombDropper
             // and Canvas.Left.
             storyboard.Children.Clear();
 
-            DoubleAnimation riseAnimation = new DoubleAnimation();
-            riseAnimation.From = currentTop;
-            riseAnimation.To = 0;
-            riseAnimation.Duration = TimeSpan.FromSeconds(2);
+            // 1. 클릭된 폭탄의 현재 위치 가져오기
+            double bombX = Canvas.GetLeft(bomb) + (bomb.ActualWidth / 2);
+            double bombY = Canvas.GetTop(bomb) + (bomb.ActualHeight / 2);
 
-            Storyboard.SetTarget(riseAnimation, bomb);
-            Storyboard.SetTargetProperty(riseAnimation, new PropertyPath("(Canvas.Top)"));
-            storyboard.Children.Add(riseAnimation);
+            // 2. 폭발 이펙트 생성 (파편 20개 생성)
+            CreateExplosion(bombX, bombY);
 
-            DoubleAnimation slideAnimation = new DoubleAnimation();
-            double currentLeft = Canvas.GetLeft(bomb);
-            // Throw the bomb off the closest side.
-            if (currentLeft < canvasBackground.ActualWidth / 2)
+            // 3. 캔버스에서 폭탄 제거 및 관련 스토리보드 중지
+            canvasBackground.Children.Remove(bomb);
+            if (storyboards.ContainsKey(bomb))
             {
-                slideAnimation.To = -100;
+                storyboards[bomb].Stop();
+                storyboards.Remove(bomb);
             }
-            else
-            {
-                slideAnimation.To = canvasBackground.ActualWidth + 100;
-            }
-            slideAnimation.Duration = TimeSpan.FromSeconds(1);
-            Storyboard.SetTarget(slideAnimation, bomb);
-            Storyboard.SetTargetProperty(slideAnimation, new PropertyPath("(Canvas.Left)"));
-            storyboard.Children.Add(slideAnimation);
-
-            // Start the new animation.
-            storyboard.Duration = slideAnimation.Duration;
-            storyboard.Begin();
         }
+        private void CreateExplosion(double centerX, double centerY)
+        {
+            Random rand = new Random();
+            int particleCount = 20; // 생성할 파편 개수
+
+            PlayExplosionSoundWav();
+
+            for (int i = 0; i < particleCount; i++)
+            {
+                // 원형 파편 UI 생성
+                Ellipse p = new Ellipse
+                {
+                    Width = rand.Next(4, 10),  // 크기 무작위
+                    Height = rand.Next(4, 10),
+                    Fill = particleBrush[rand.Next(particleBrush.Length)]   // 폭발 색상 (노랑, 주황 등 섞어도 좋습니다)
+                };
+
+                // 초기 위치 설정 (폭탄 중심)
+                Canvas.SetLeft(p, centerX);
+                Canvas.SetTop(p, centerY);
+                canvasBackground.Children.Add(p);
+
+                // 무작위 각도와 속도 계산 (원형으로 퍼지도록)
+                double angle = rand.NextDouble() * Math.PI * 2;
+                double speed = rand.NextDouble() * 8 + 2; // 속도 2~10 사이
+
+                particles.Add(new ParticleInfo
+                {
+                    Element = p,
+                    VelocityX = Math.Cos(angle) * speed,
+                    VelocityY = Math.Sin(angle) * speed,
+                    Life = 1.0,
+                    FadeSpeed = rand.NextDouble() * 0.03 + 0.02 // 서서히 사라지는 속도
+                });
+            }
+        }
+        private void UpdateParticles(object sender, EventArgs e)
+        {
+            // 리스트를 역순으로 순회해야 삭제 시 인덱스가 꼬이지 않습니다.
+            for (int i = particles.Count - 1; i >= 0; i--)
+            {
+                var p = particles[i];
+
+                // 1. 수명 차감
+                p.Life -= p.FadeSpeed;
+
+                if (p.Life <= 0)
+                {
+                    // 2. 수명이 다하면 화면과 리스트에서 완전히 제거
+                    canvasBackground.Children.Remove(p.Element);
+                    particles.RemoveAt(i);
+                }
+                else
+                {
+                    // 3. 파편 이동 위치 계산
+                    double nextX = Canvas.GetLeft(p.Element) + p.VelocityX;
+                    // 중력 효과를 주고 싶다면 여기에 약간의 가속도를 더할 수 있습니다 (예: p.VelocityY += 0.2;)
+                    double nextY = Canvas.GetTop(p.Element) + p.VelocityY;
+
+                    Canvas.SetLeft(p.Element, nextX);
+                    Canvas.SetTop(p.Element, nextY);
+
+                    // 4. 투명도 적용 (서서히 흐려짐)
+                    p.Element.Opacity = p.Life;
+                }
+            }
+        }
+
 
         // Keep track of how many are dropped and stopped.
         private int droppedCount = 0;
@@ -214,9 +287,31 @@ namespace BombDropper
             DoubleAnimation completedAnimation = (DoubleAnimation)clockGroup.Children[0].Timeline;
             Bomb completedBomb = (Bomb)Storyboard.GetTarget(completedAnimation);
 
+            // 💡 [수정] 파괴되기 전 이벤트 해제
+            if (completedBomb != null)
+            {
+                completedBomb.MouseLeftButtonDown -= bomb_MouseLeftButtonDown;
+            }
+
             // Determine if a bomb fell or flew off the Canvas after being clicked.
             if (completedBomb.IsFalling)
             {
+                // Get the bomb's current position.
+                Storyboard storyboard = storyboards[completedBomb];
+                double currentTop = Canvas.GetTop(completedBomb);
+
+                // Stop the bomb from falling.
+                storyboard.Stop();
+
+                // Reuse the existing storyboard, but with new animations.
+                // Send the bomb on a new trajectory by animating Canvas.Top
+                // and Canvas.Left.
+                storyboard.Children.Clear();
+
+                // 1. 클릭된 폭탄의 현재 위치 가져오기
+                double bombX = Canvas.GetLeft(completedBomb) + (completedBomb.ActualWidth / 2);
+                double bombY = Canvas.GetTop(completedBomb) + (completedBomb.ActualHeight / 2);
+                CreateExplosion(bombX, bombY);
                 droppedCount++;
             }
             else
@@ -234,6 +329,9 @@ namespace BombDropper
                 bombTimer.Stop();
                 lblStatus.Text += "\r\n\r\nGame over.";
 
+                // 💡 [추가] 게임 종료 시 배경음악 끄기
+                StopBGM();
+
                 // Find all the storyboards that are underway.
                 foreach (KeyValuePair<Bomb, Storyboard> item in storyboards)
                 {
@@ -245,6 +343,13 @@ namespace BombDropper
                 }
                 // Empty the tracking collection.
                 storyboards.Clear();
+
+                // 💡 [추가] 남아있는 모든 파편 UI 제거 및 데이터 초기화
+                foreach (var p in particles)
+                {
+                    canvasBackground.Children.Remove(p.Element);
+                }
+                particles.Clear();
 
                 // Allow the user to start a new game.
                 cmdStart.IsEnabled = true;
@@ -259,8 +364,105 @@ namespace BombDropper
             }
         }
 
+        private void PlayExplosionSound()
+        {
+            try
+            {
+                MediaPlayer soundPlayer = new MediaPlayer();
+                string soundPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bomb.mp3");
+
+                soundPlayer.Open(new Uri(soundPath, UriKind.Absolute));
+
+                // 💡 중요: GC가 수거하지 못하도록 전역 리스트에 담아 참조를 유지합니다.
+                activePlayers.Add(soundPlayer);
+
+                soundPlayer.MediaEnded += (s, e) =>
+                {
+                    MediaPlayer mp = s as MediaPlayer;
+                    if (mp != null)
+                    {
+                        mp.Stop();
+                        mp.Close();
+
+                        // 💡 재생이 끝나면 리스트에서 안전하게 제거 (메모리 해제)
+                        activePlayers.Remove(mp);
+                    }
+                };
+
+                // WPF MediaPlayer 버그 방지를 위해 위치를 처음으로 초기화 후 재생
+                soundPlayer.Position = TimeSpan.Zero;
+                soundPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("사운드 재생 실패: " + ex.Message);
+            }
+        }
 
 
+        private void PlayExplosionSoundWav()
+        {
+            try
+            {
+                string soundPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bomb.wav");
 
+                // SoundPlayer는 비동기로 다중 재생(Play)해도 메모리 관리가 안정적입니다.
+                SoundPlayer player = new SoundPlayer(soundPath);
+                player.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
+
+
+        private void StartBGM()
+        {
+            try
+            {
+                string bgmPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bgm.mp3");
+                bgmPlayer.Open(new Uri(bgmPath, UriKind.Absolute));
+
+                // 볼륨 설정 (0.0 ~ 1.0) -> 효과음보다 조금 작게 설정하는 것이 좋습니다.
+                bgmPlayer.Volume = 0.5;
+
+                // 💡 무한 반복 재생 설정
+                bgmPlayer.MediaEnded -= BgmPlayer_MediaEnded; // 중복 등록 방지
+                bgmPlayer.MediaEnded += BgmPlayer_MediaEnded;
+
+                bgmPlayer.Position = TimeSpan.Zero;
+                bgmPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("BGM 재생 실패: " + ex.Message);
+            }
+        }
+
+        private void BgmPlayer_MediaEnded(object sender, EventArgs e)
+        {
+            // 음악이 끝나면 다시 처음으로 돌려서 재생
+            bgmPlayer.Position = TimeSpan.Zero;
+            bgmPlayer.Play();
+        }
+
+        private void StopBGM()
+        {
+            // BGM 정지 및 리소스 해제
+            bgmPlayer.Stop();
+            bgmPlayer.Close();
+        }
+
+
+    }
+
+    public class ParticleInfo
+    {
+        public Ellipse Element { get; set; }  // 화면에 그려질 원형 파편
+        public double VelocityX { get; set; } // 가로 이동 속도
+        public double VelocityY { get; set; } // 세로 이동 속도 (중력 효과 가능)
+        public double Life { get; set; }      // 남은 수명 (1.0에서 시작해 0이 되면 삭제)
+        public double FadeSpeed { get; set; } // 사라지는 속도
     }
 }
