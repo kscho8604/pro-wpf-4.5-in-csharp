@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,12 +18,20 @@ namespace CustomBehaviorsLibrary
         // The default fade out time is 2 seconds.
         public static readonly DependencyProperty DurationProperty =
           DependencyProperty.Register("Duration", typeof(TimeSpan),
-            typeof(FadeOutAction), new PropertyMetadata(TimeSpan.FromSeconds(2)));
+            typeof(FadeOutAction), new PropertyMetadata(TimeSpan.FromSeconds(3)));
 
         public TimeSpan Duration
         {
-            get { return (TimeSpan)GetValue(FadeOutAction.DurationProperty); }
-            set { SetValue(FadeOutAction.DurationProperty, value); }
+            get
+            {
+                Debug.WriteLine($"Get Duration {(TimeSpan)GetValue(FadeOutAction.DurationProperty)}");
+                return (TimeSpan)GetValue(FadeOutAction.DurationProperty);
+            }
+            set
+            {
+                Debug.WriteLine($"Set Duration {value}");
+                SetValue(FadeOutAction.DurationProperty, value);
+            }
         }
 
         private Storyboard fadeStoryboard = new Storyboard();
@@ -47,7 +56,7 @@ namespace CustomBehaviorsLibrary
             // in case the value for the Duration property changes.
             fadeAnimation.To = 0;
             fadeAnimation.Duration = Duration;
-
+            Debug.WriteLine($"Duration {Duration}");
             fadeStoryboard.Begin();
         }
     }

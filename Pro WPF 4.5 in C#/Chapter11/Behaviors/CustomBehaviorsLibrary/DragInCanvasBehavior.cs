@@ -18,6 +18,7 @@ namespace CustomBehaviorsLibrary
             this.AssociatedObject.MouseLeftButtonDown += AssociatedObject_MouseLeftButtonDown;
             this.AssociatedObject.MouseMove += AssociatedObject_MouseMove;
             this.AssociatedObject.MouseLeftButtonUp += AssociatedObject_MouseLeftButtonUp;
+            this.AssociatedObject.MouseWheel += AssociatedObject_MouseWheel;
         }
 
         protected override void OnDetaching()
@@ -28,6 +29,7 @@ namespace CustomBehaviorsLibrary
             this.AssociatedObject.MouseLeftButtonDown -= AssociatedObject_MouseLeftButtonDown;
             this.AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
             this.AssociatedObject.MouseLeftButtonUp -= AssociatedObject_MouseLeftButtonUp;
+            this.AssociatedObject.MouseWheel -= AssociatedObject_MouseWheel;
         }
 
         // 드래그 상태 추적
@@ -72,6 +74,35 @@ namespace CustomBehaviorsLibrary
                 AssociatedObject.ReleaseMouseCapture();
                 isDragging = false;
             }
+        }
+        private void AssociatedObject_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // 이벤트가 부모 컨트롤(Canvas 등)로 전파되어 화면이 스크롤되는 것을 방지
+            e.Handled = true;
+
+            var element = this.AssociatedObject as FrameworkElement;
+            if (element == null) return;
+
+            // 회전 중심점을 요소의 정중앙(0.5, 0.5)으로 설정
+            element.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            // 기존 RenderTransform이 RotateTransform인지 확인하고, 없으면 새로 생성
+            var rotateTransform = element.RenderTransform as RotateTransform;
+            if (rotateTransform == null)
+            {
+                rotateTransform = new RotateTransform(0);
+                element.RenderTransform = rotateTransform;
+            }
+
+            // 휠 방향에 따른 회전 각도 설정 (한 번 돌릴 때마다 15도씩 회전)
+            // e.Delta > 0 이면 시계 방향(+15), 아니면 반시계 방향(-15)
+            double angleDelta = e.Delta > 0 ? 15 : -15;
+
+            // 새로운 각도 적용
+            rotateTransform.Angle += angleDelta;
+
+            // 각도가 너무 커지거나 작아지지 않도록 0~360도 사이로 보정 (선택 사항)
+            rotateTransform.Angle %= 360;
         }
     }
 }

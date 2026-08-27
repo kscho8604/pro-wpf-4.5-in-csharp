@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,12 +19,19 @@ namespace Drawing
 
     public partial class VisualLayer : System.Windows.Window
     {
-
+        private DrawingVisual v;
         public VisualLayer()
         {
             InitializeComponent();
-            DrawingVisual v = new DrawingVisual();
-            DrawSquare(v, new Point(10, 10), false);
+            v = new DrawingVisual();
+            using (DrawingContext dc = v.RenderOpen())
+            {
+                Pen drawingPen = new Pen(Brushes.Black, 3);
+                dc.DrawLine(drawingPen, new Point(0, 50), new Point(50, 0));
+                dc.DrawLine(drawingPen, new Point(50, 0), new Point(100, 50));
+                dc.DrawLine(drawingPen, new Point(0, 50), new Point(100, 50));
+            }
+            drawingSurface.AddVisual(v);
         }
 
         // Variables for dragging shapes.
@@ -102,12 +110,12 @@ namespace Drawing
 
         // Rendering the square.
         private void DrawSquare(DrawingVisual visual, Point topLeftCorner, bool isSelected)
-        {            
+        {
             using (DrawingContext dc = visual.RenderOpen())
             {
                 Brush brush = drawingBrush;
-                if (isSelected) brush = selectedDrawingBrush;                
-                                
+                if (isSelected) brush = selectedDrawingBrush;
+
                 dc.DrawRectangle(brush, drawingPen,
                     new Rect(topLeftCorner, squareSize));
             }
@@ -122,14 +130,14 @@ namespace Drawing
                 // Display all the squares in this region.
                 RectangleGeometry geometry = new RectangleGeometry(
                     new Rect(selectionSquareTopLeft, e.GetPosition(drawingSurface)));
-                List<DrawingVisual> visualsInRegion = 
+                List<DrawingVisual> visualsInRegion =
                     drawingSurface.GetVisuals(geometry);
                 MessageBox.Show(String.Format("You selected {0} square(s).", visualsInRegion.Count));
 
                 isMultiSelecting = false;
-                drawingSurface.DeleteVisual(selectionSquare);                
-                drawingSurface.ReleaseMouseCapture();                
-            }            
+                drawingSurface.DeleteVisual(selectionSquare);
+                drawingSurface.ReleaseMouseCapture();
+            }
         }
 
         private void ClearSelection()
@@ -137,8 +145,8 @@ namespace Drawing
             Point topLeftCorner = new Point(
                         selectedVisual.ContentBounds.TopLeft.X + drawingPen.Thickness / 2,
                         selectedVisual.ContentBounds.TopLeft.Y + drawingPen.Thickness / 2);
-                    DrawSquare(selectedVisual, topLeftCorner, false);
-                    selectedVisual = null;
+            DrawSquare(selectedVisual, topLeftCorner, false);
+            selectedVisual = null;
         }
 
         private void drawingSurface_MouseMove(object sender, MouseEventArgs e)
@@ -157,7 +165,7 @@ namespace Drawing
 
         private Brush selectionSquareBrush = Brushes.Transparent;
         private Pen selectionSquarePen = new Pen(Brushes.Black, 2);
-        
+
         private void DrawSelectionSquare(Point point1, Point point2)
         {
             selectionSquarePen.DashStyle = DashStyles.Dash;
@@ -166,6 +174,14 @@ namespace Drawing
             {
                 dc.DrawRectangle(selectionSquareBrush, selectionSquarePen,
                     new Rect(point1, point2));
+            }
+
+            using (DrawingContext dc = v.RenderOpen())
+            {
+                Pen drawingPen = new Pen(Brushes.Black, 3);
+                dc.DrawLine(drawingPen, new Point(point2.X, point2.Y + 50), new Point(point2.X + 50, point2.Y));
+                dc.DrawLine(drawingPen, new Point(point2.X + 50, point2.Y + 0), new Point(point2.X + 100, point2.Y + 50));
+                dc.DrawLine(drawingPen, new Point(point2.X + 0, point2.Y + 50), new Point(point2.X + 100, point2.Y + 50));
             }
         }
     }

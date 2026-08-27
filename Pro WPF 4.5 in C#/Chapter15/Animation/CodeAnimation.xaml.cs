@@ -31,20 +31,20 @@ namespace Animation
             DoubleAnimation widthAnimation = new DoubleAnimation();
             widthAnimation.To = this.Width - 30;
             widthAnimation.Duration = TimeSpan.FromSeconds(5);
-            widthAnimation.Completed += animation_Completed;
+            //widthAnimation.Completed += animation_Completed;
 
             DoubleAnimation heightAnimation = new DoubleAnimation();
-            heightAnimation.To = (this.Height - 50)/3;
+            heightAnimation.To = (this.Height - 50) / 3;
             heightAnimation.Duration = TimeSpan.FromSeconds(5);
 
             cmdGrow.BeginAnimation(Button.WidthProperty, widthAnimation);
-            cmdGrow.BeginAnimation(Button.HeightProperty, heightAnimation);    
+            cmdGrow.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
         private void animation_Completed(object sender, EventArgs e)
         {
-            //double currentWidth = cmdGrow.Width;
-            //cmdGrow.BeginAnimation(Button.WidthProperty, null);
-            //cmdGrow.Width = currentWidth;
+            double currentWidth = cmdGrow.Width;
+            cmdGrow.BeginAnimation(Button.WidthProperty, null);
+            cmdGrow.Width = currentWidth;
 
             //MessageBox.Show("Completed!");
         }
@@ -52,10 +52,10 @@ namespace Animation
         private void cmdShrink_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation widthAnimation = new DoubleAnimation();
-            widthAnimation.Duration = TimeSpan.FromSeconds(5);            
+            widthAnimation.Duration = TimeSpan.FromSeconds(5);
             DoubleAnimation heightAnimation = new DoubleAnimation();
             heightAnimation.Duration = TimeSpan.FromSeconds(5);
-            
+
             cmdGrow.BeginAnimation(Button.WidthProperty, widthAnimation);
             cmdGrow.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
@@ -64,9 +64,9 @@ namespace Animation
         {
             DoubleAnimation widthAnimation = new DoubleAnimation();
             widthAnimation.By = 10;
-            widthAnimation.Duration = TimeSpan.FromSeconds(0.5);                       
+            widthAnimation.Duration = TimeSpan.FromSeconds(0.5);
 
-            cmdGrowIncrementally.BeginAnimation(Button.WidthProperty, widthAnimation);            
+            cmdGrowIncrementally.BeginAnimation(Button.WidthProperty, widthAnimation);
         }
     }
 }

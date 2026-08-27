@@ -7,7 +7,7 @@ namespace Microsoft.Samples.PerFrameAnimations
     using System.Windows.Controls; //LayoutOverrideDecorator
     using System.Collections.Generic;
     using System.Windows.Input;
-
+    using Microsoft.Samples.PerFrameAnimations.ParticleEffectExample;
     internal class Particle
     {
         public Point Location;
@@ -105,7 +105,7 @@ namespace Microsoft.Samples.PerFrameAnimations
                 typeof(int),
                 typeof(FireworkEffect),
                 new FrameworkPropertyMetadata(30)
-            ); 
+            );
         #endregion
 
         #region Properties
@@ -252,7 +252,7 @@ namespace Microsoft.Samples.PerFrameAnimations
 
                 SetValue(ClickBurstSizeProperty, value);
             }
-        } 
+        }
         #endregion
 
 
@@ -305,7 +305,7 @@ namespace Microsoft.Samples.PerFrameAnimations
                 InvalidateVisual();
 
             //update all particles
-            for (int i = 0; i < _particles.Count; )
+            for (int i = 0; i < _particles.Count;)
             {
                 //_particles[i]
                 Particle p = _particles[i];
@@ -322,7 +322,7 @@ namespace Microsoft.Samples.PerFrameAnimations
 
                 if (_bounceOffContainer)
                 {
-                    double radius = p.Diameter/2.0;
+                    double radius = p.Diameter / 2.0;
                     if (p.Location.X - radius < 0.0)
                     {
                         p.Location.X = radius;
@@ -363,9 +363,9 @@ namespace Microsoft.Samples.PerFrameAnimations
                 //figure out where in the particles life we are
                 double particlelife = (_timeTracker.ElapsedTime - p.LifeTime).TotalSeconds / (p.DeathTime - p.LifeTime).TotalSeconds;
                 Color currentcolor = Color.Multiply(p.StartColor, (float)(1.0 - particlelife)) + Color.Multiply(p.EndColor, (float)particlelife);
-                Brush brush = new RadialGradientBrush(currentcolor, Color.FromArgb(0, currentcolor.R,currentcolor.G,currentcolor.B));
-                
-                RectangleGeometry rect = new RectangleGeometry(new Rect(new Point(p.Location.X - p.Diameter / 2.0,p.Location.Y - p.Diameter / 2.0), new Size(p.Diameter,p.Diameter)));
+                Brush brush = new RadialGradientBrush(currentcolor, Color.FromArgb(0, currentcolor.R, currentcolor.G, currentcolor.B));
+
+                RectangleGeometry rect = new RectangleGeometry(new Rect(new Point(p.Location.X - p.Diameter / 2.0, p.Location.Y - p.Diameter / 2.0), new Size(p.Diameter, p.Diameter)));
                 drawingContext.DrawGeometry(brush, null, rect);
             }
         }
@@ -412,13 +412,13 @@ namespace Microsoft.Samples.PerFrameAnimations
                 Color endColor = EndColor;
                 Color endColorVariation = EndColorVariation;
 
-                Color startRandColor = Color.FromScRgb(startColorVariation.ScA * (float)(_random.NextDouble() * 2.0 - 1.0),startColorVariation.ScR * (float)(_random.NextDouble() * 2.0 - 1.0),startColorVariation.ScG * (float)(_random.NextDouble() * 2.0 - 1.0),startColorVariation.ScB * (float)(_random.NextDouble() * 2.0 - 1.0));
+                Color startRandColor = Color.FromScRgb(startColorVariation.ScA * (float)(_random.NextDouble() * 2.0 - 1.0), startColorVariation.ScR * (float)(_random.NextDouble() * 2.0 - 1.0), startColorVariation.ScG * (float)(_random.NextDouble() * 2.0 - 1.0), startColorVariation.ScB * (float)(_random.NextDouble() * 2.0 - 1.0));
                 Color endRandColor = Color.FromScRgb(endColorVariation.ScA * (float)(_random.NextDouble() * 2.0 - 1.0), endColorVariation.ScR * (float)(_random.NextDouble() * 2.0 - 1.0), endColorVariation.ScG * (float)(_random.NextDouble() * 2.0 - 1.0), endColorVariation.ScB * (float)(_random.NextDouble() * 2.0 - 1.0));
 
                 p.StartColor = startColor + startRandColor;
                 p.EndColor = endColor + endRandColor;
                 _particles.Add(p);
             }
-        }        
+        }
     }
 }

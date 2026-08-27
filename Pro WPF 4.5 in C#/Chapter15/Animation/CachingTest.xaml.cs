@@ -21,18 +21,18 @@ namespace Animation
         public CachingTest()
         {
             InitializeComponent();
-                        
+
             PathGeometry pathGeometry = new PathGeometry();
             PathFigure pathFigure = new PathFigure();
-            
-            pathFigure.StartPoint = new Point(0,0);
+
+            pathFigure.StartPoint = new Point(0, 0);
 
             PathSegmentCollection pathSegmentCollection = new PathSegmentCollection();
 
             int maxHeight = (int)this.Height;
             int maxWidth = (int)this.Width;
             Random rand = new Random();
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 LineSegment newSegment = new LineSegment();
                 newSegment.Point = new Point(rand.Next(0, maxWidth), rand.Next(0, maxHeight));
@@ -52,11 +52,11 @@ namespace Animation
             if (chkCache.IsChecked == true)
             {
                 BitmapCache bitmapCache = new BitmapCache();
-                pathBackground.CacheMode = new BitmapCache();
+                pathBackground.CacheMode = bitmapCache;
             }
             else
             {
-                pathBackground.CacheMode = null;                
+                pathBackground.CacheMode = null;
             }
         }
     }

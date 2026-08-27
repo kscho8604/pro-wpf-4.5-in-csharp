@@ -1,4 +1,4 @@
-namespace Microsoft.Samples.PerFrameAnimations
+namespace Microsoft.Samples.PerFrameAnimations.ReusableFollowExamples
 {
     using System;
     using System.Windows; //uielement
@@ -12,11 +12,11 @@ namespace Microsoft.Samples.PerFrameAnimations
         private Clock _timeClock;
         private TimeSpan? _lastTime;
         private double _deltaTime;
-        private double _timerInterval = -1; 
+        private double _timerInterval = -1;
         #endregion
 
         #region Properties
-        
+
         public double TimerInterval
         {
             get
@@ -51,7 +51,7 @@ namespace Microsoft.Samples.PerFrameAnimations
         #endregion
 
         #region Events
-        public event EventHandler TimerFired; 
+        public event EventHandler TimerFired;
         #endregion
 
         #region Constructors
@@ -61,7 +61,7 @@ namespace Microsoft.Samples.PerFrameAnimations
             _timeClock = _timeline.CreateClock();
             _timeClock.Controller.Begin();
             _lastTime = TimeSpan.FromSeconds(0);
-        } 
+        }
         #endregion
 
         public double Update()
@@ -95,7 +95,7 @@ namespace Microsoft.Samples.PerFrameAnimations
 
             //cycle old time
             _lastTime = currentTime;
-            
+
             return _deltaTime;
         }
     }

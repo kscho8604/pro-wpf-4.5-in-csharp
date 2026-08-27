@@ -39,7 +39,7 @@ namespace Animation
             if (normalizedTime == 1) return 1;
 
             // Offset the value by a random amount.
-            return Math.Abs(normalizedTime - (double)rand.Next(0,10)/(2010 - Jitter));
+            return Math.Abs(normalizedTime - (double)rand.Next(0, 10) / (2010 - Jitter));
         }
 
         public int Jitter
@@ -57,7 +57,7 @@ namespace Animation
             int jitterValue = (int)value;
             return ((jitterValue <= 2000) && (jitterValue >= 0));
         }
-            
+
         // This required override simply provides a live instance of your easing function.
         protected override Freezable CreateInstanceCore()
         {

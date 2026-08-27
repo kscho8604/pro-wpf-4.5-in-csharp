@@ -7,6 +7,7 @@ namespace Microsoft.Samples.PerFrameAnimations
     using System.Windows.Controls;
     using System.Collections.Generic;
     using System.Windows.Input;
+    using Microsoft.Samples.PerFrameAnimations.ParticleEffectExample;
 
     public class SonicEffect : OverlayRenderDecorator
     {
@@ -82,7 +83,7 @@ namespace Microsoft.Samples.PerFrameAnimations
             {
                 _ringColor = (Color)value;
             }
-        } 
+        }
         #endregion
 
         public SonicEffect()
@@ -91,7 +92,7 @@ namespace Microsoft.Samples.PerFrameAnimations
 
         protected override void OnAttachChild(UIElement child)
         {
-             child.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
+            child.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
         }
 
         protected override void OnDetachChild(UIElement child)
@@ -144,7 +145,7 @@ namespace Microsoft.Samples.PerFrameAnimations
                     CompositionTarget.Rendering -= OnFrameCallback;
                 }
             }
-            
+
         }
 
         protected override void OnOverlayRender(DrawingContext dc)

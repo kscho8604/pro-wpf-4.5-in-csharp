@@ -11,7 +11,12 @@
                    Canvas.Top="10"
                    Fill="Yellow"
                    Width="40"
-                   Height="60"></Rectangle>
+                   Height="60">
+
+            <b:Interaction.Behaviors>
+                <custom:DragInCanvasBehavior></custom:DragInCanvasBehavior>
+            </b:Interaction.Behaviors>
+        </Rectangle>
         <Ellipse Canvas.Left="10"
                  Canvas.Top="70"
                  Fill="Blue"

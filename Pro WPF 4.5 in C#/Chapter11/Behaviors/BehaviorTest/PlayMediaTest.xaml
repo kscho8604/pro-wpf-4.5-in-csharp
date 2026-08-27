@@ -15,9 +15,20 @@
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="Click">
                     <custom:PlaySoundAction Source="test.mp3"/>
+                    <custom:FadeOutAction Duration="00:00:02"
+                                          TargetName="border"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
         </Button>
-
+        <Border x:Name="border"
+                Background="Orange"
+                BorderBrush="Black"
+                BorderThickness="1"
+                Margin="3,0">
+            <TextBlock Margin="5"
+                       FontSize="17"
+                       TextWrapping="Wrap"
+                       Text="I'm the target of the FadeOutAction and FadeInAction."></TextBlock>
+        </Border>
     </StackPanel>
 </Window>

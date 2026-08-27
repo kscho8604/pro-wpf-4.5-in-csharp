@@ -22,6 +22,30 @@ namespace Drawing
         public Shapes()
         {
             InitializeComponent();
+
+            foreach (var child in MyStackPanel.Children)
+            {
+                if (child is Ellipse ellipse)
+                {
+                    ellipse.Fill = Brushes.Green; // 원하는 변경 작업
+                    ellipse.Stroke = Brushes.Black;
+                    ellipse.Width = 150;
+                    ellipse.Height = 75;
+
+                    break;
+                }
+            }
+        }
+
+        private void MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Shape clickedShape)
+            {
+                clickedShape.Fill = Brushes.Red;
+                clickedShape.Stroke = Brushes.Black;
+                clickedShape.Width = 75;
+                clickedShape.Height = 75;
+            }
         }
 
     }

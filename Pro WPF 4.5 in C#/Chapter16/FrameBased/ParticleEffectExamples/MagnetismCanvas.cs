@@ -7,7 +7,7 @@ namespace Microsoft.Samples.PerFrameAnimations
     using System.Windows.Controls; //Canvas
     using System.Collections.Generic;
     using System.Windows.Input;
-
+    using Microsoft.Samples.PerFrameAnimations.ParticleEffectExample;
     public class MagnitismCanvas : Canvas
     {
         #region Private Members

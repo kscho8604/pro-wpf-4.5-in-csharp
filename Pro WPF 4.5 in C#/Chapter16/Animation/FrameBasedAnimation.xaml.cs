@@ -44,36 +44,48 @@ namespace Animation
         private void StopRendering()
         {
             CompositionTarget.Rendering -= RenderFrame;
-            rendering = false;            
+            rendering = false;
         }
-                
+
         private List<EllipseInfo> ellipses = new List<EllipseInfo>();
-        
+
         private double accelerationY = 0.1;
         private int minStartingSpeed = 1;
         private int maxStartingSpeed = 50;
         private double speedRatio = 0.1;
         private int minEllipses = 20;
-        private int maxEllipses = 100;        
+        private int maxEllipses = 100;
         private int ellipseRadius = 10;
-            
+        private List<Brushes> fillColors = new List<Brushes>();
+
         private void RenderFrame(object sender, EventArgs e)
         {
             if (ellipses.Count == 0)
             {
                 // Animation just started. Create the ellipses.
-                int halfCanvasWidth = (int)canvas.ActualWidth / 2;                
-                
+                int halfCanvasWidth = (int)canvas.ActualWidth / 2;
+
+                // 💡 1. 원하는 예쁜 브러시 색상들을 배열로 정의합니다.
+                Brush[] beautifulBrushes = new Brush[]
+                {
+                    Brushes.LimeGreen,
+                    Brushes.DodgerBlue,
+                    Brushes.DeepPink,
+                    Brushes.Orange,
+                    Brushes.MediumPurple,
+                    Brushes.Cyan
+                };
+
                 Random rand = new Random();
-                int ellipseCount = rand.Next(minEllipses, maxEllipses+1);
+                int ellipseCount = rand.Next(minEllipses, maxEllipses + 1);
                 for (int i = 0; i < ellipseCount; i++)
                 {
                     Ellipse ellipse = new Ellipse();
-                    ellipse.Fill = Brushes.LimeGreen;
+                    ellipse.Fill = beautifulBrushes[rand.Next(beautifulBrushes.Length)];
                     ellipse.Width = ellipseRadius;
                     ellipse.Height = ellipseRadius;
                     Canvas.SetLeft(ellipse, halfCanvasWidth + rand.Next(-halfCanvasWidth, halfCanvasWidth));
-                    Canvas.SetTop(ellipse, 0);
+                    Canvas.SetTop(ellipse, 50);
                     canvas.Children.Add(ellipse);
 
                     EllipseInfo info = new EllipseInfo(ellipse, speedRatio * rand.Next(minStartingSpeed, maxStartingSpeed));
@@ -82,13 +94,13 @@ namespace Animation
             }
             else
             {
-                for (int i = ellipses.Count-1; i >= 0; i--)                
+                for (int i = ellipses.Count - 1; i >= 0; i--)
                 {
                     EllipseInfo info = ellipses[i];
                     double top = Canvas.GetTop(info.Ellipse);
-                    Canvas.SetTop(info.Ellipse, top + 1 * info.VelocityY);                    
+                    Canvas.SetTop(info.Ellipse, top - 1 * info.VelocityY);
 
-                    if (top >= (canvas.ActualHeight - ellipseRadius*2 - 10))
+                    if (top >= (canvas.ActualHeight - ellipseRadius * 2 - 10))
                     {
                         // This circle has reached the bottom.
                         // Stop animating it.
@@ -97,7 +109,7 @@ namespace Animation
                     else
                     {
                         // Increase the velocity.
-                        info.VelocityY += accelerationY;
+                        info.VelocityY -= accelerationY;
                     }
 
                     if (ellipses.Count == 0)
@@ -113,12 +125,12 @@ namespace Animation
     }
 
     public class EllipseInfo
-    {        
+    {
         public Ellipse Ellipse
         {
             get; set;
         }
-                
+
         public double VelocityY
         {
             get; set;

@@ -1,7 +1,9 @@
 ﻿<Window x:Class="Animation.CachingTest2"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="CachingTest2" Height="300" Width="300">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CachingTest2"
+        Height="300"
+        Width="300">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <EventTrigger.Actions>
@@ -9,14 +11,22 @@
 
                     <Storyboard x:Name="storyboard">
                         <DoubleAnimation Storyboard.TargetName="rotateTransform"
-			Storyboard.TargetProperty="Angle"
-			To="360" Duration="0:0:2" RepeatBehavior="Forever"></DoubleAnimation>
+                                         Storyboard.TargetProperty="Angle"
+                                         To="360"
+                                         Duration="0:0:2"
+                                         RepeatBehavior="Forever"></DoubleAnimation>
                         <DoubleAnimation Storyboard.TargetName="scaleTransform"
-			Storyboard.TargetProperty="ScaleX" AutoReverse="True"
-			To="20" Duration="0:0:1.8" RepeatBehavior="Forever"></DoubleAnimation>
+                                         Storyboard.TargetProperty="ScaleX"
+                                         AutoReverse="True"
+                                         To="20"
+                                         Duration="0:0:1.8"
+                                         RepeatBehavior="Forever"></DoubleAnimation>
                         <DoubleAnimation Storyboard.TargetName="scaleTransform"
-			Storyboard.TargetProperty="ScaleY" AutoReverse="True"
-			To="20" Duration="0:0:1.8" RepeatBehavior="Forever"></DoubleAnimation>
+                                         Storyboard.TargetProperty="ScaleY"
+                                         AutoReverse="True"
+                                         To="20"
+                                         Duration="0:0:1.8"
+                                         RepeatBehavior="Forever"></DoubleAnimation>
                     </Storyboard>
 
                 </BeginStoryboard>
@@ -31,13 +41,21 @@
         </Grid.RowDefinitions>
 
         <Canvas>
-            <Image x:Name="img" Source="phone_booth.jpg" Stretch="None" CacheMode="BitmapCache">
+            <Image x:Name="img"
+                   Source="day.jpg"
+                   Stretch="None"
+                   CacheMode="BitmapCache">
                 <Image.RenderTransform>
-                    <RotateTransform x:Name="rotateTransform" CenterX="300" CenterY="100"></RotateTransform>
+                    <RotateTransform x:Name="rotateTransform"
+                                     CenterX="300"
+                                     CenterY="100"></RotateTransform>
                 </Image.RenderTransform>
             </Image>
 
-            <Button x:Name="cmd" Content="I GROW and SHRINK." Canvas.Top="70" Canvas.Left="10" >
+            <Button x:Name="cmd"
+                    Content="I GROW and SHRINK."
+                    Canvas.Top="70"
+                    Canvas.Left="10">
                 <Button.CacheMode>
                     <BitmapCache RenderAtScale="5"></BitmapCache>
                 </Button.CacheMode>
@@ -47,7 +65,10 @@
             </Button>
         </Canvas>
 
-        <CheckBox Grid.Row="2" x:Name="chkCache" Content="Enable Caching"
-		 IsChecked="True" Click="chkCache_Click"></CheckBox>
+        <CheckBox Grid.Row="2"
+                  x:Name="chkCache"
+                  Content="Enable Caching"
+                  IsChecked="True"
+                  Click="chkCache_Click"></CheckBox>
     </Grid>
 </Window>

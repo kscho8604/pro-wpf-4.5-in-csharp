@@ -1,48 +1,71 @@
 ﻿<Window x:Class="Animation.ExpandElement"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="ExpandElement" Height="423.2" Width="488.8" 
-    >
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ExpandElement"
+        Height="423.2"
+        Width="488.8">
   <Window.Triggers>
     <EventTrigger RoutedEvent="Window.Loaded">
       <EventTrigger.Actions>
         <BeginStoryboard>
           <Storyboard SpeedRatio="1.5">
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="Opacity"
-                                From="0.2" To="1" Duration="0:0:2.5"></DoubleAnimation>
+                             Storyboard.TargetProperty="Opacity"
+                             From="0.2"
+                             To="1"
+                             Duration="0:0:2.5"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="RenderTransform.Children[1].Angle"
-                                From="70" To="0" Duration="0:0:2" ></DoubleAnimation>
-            
+                             Storyboard.TargetProperty="RenderTransform.Children[1].Angle"
+                             From="70"
+                             To="0"
+                             Duration="0:0:2"></DoubleAnimation>
+
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
-                                From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                             From="0"
+                             To="1"
+                             Duration="0:0:2"
+                             AccelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
-                                From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
-            
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                             From="0"
+                             To="1"
+                             Duration="0:0:2"
+                             AccelerationRatio="1"></DoubleAnimation>
+
             <DoubleAnimation Storyboard.TargetName="element"
-                                            Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
-                                            To="0.98" BeginTime="0:0:2" Duration="0:0:0.05"  DecelerationRatio="1"></DoubleAnimation>
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                             To="0.98"
+                             BeginTime="0:0:2"
+                             Duration="0:0:0.05"
+                             DecelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
-                                To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                             To="0.98"
+                             BeginTime="0:0:2"
+                             Duration="0:0:0.05"
+                             DecelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="element"
-                                            Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
-                                            To="1" BeginTime="0:0:2.05" Duration="0:0:0.2"  AccelerationRatio="1"></DoubleAnimation>
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                             To="1"
+                             BeginTime="0:0:2.05"
+                             Duration="0:0:0.2"
+                             AccelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="element"
-                                Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
-                                To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
+                             Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                             To="1"
+                             BeginTime="0:0:2.05"
+                             Duration="0:0:0.2"
+                             AccelerationRatio="1"></DoubleAnimation>
 
           </Storyboard>
         </BeginStoryboard>
       </EventTrigger.Actions>
     </EventTrigger>
   </Window.Triggers>
-    
-    <Grid>
-      <!--<Button Name="element">
+
+  <Grid>
+    <!--<Button Name="element">
         <Button.Content>Text</Button.Content>
         <Button.RenderTransform>
           <TransformGroup>
@@ -52,20 +75,25 @@
           </TransformGroup>
         </Button.RenderTransform>
       </Button>-->
-      <Border  Name="element" Margin="3" Background="LightGoldenrodYellow"
-               BorderBrush="DarkBlue" BorderThickness="2" CornerRadius="5" >
-        <Border.RenderTransform>
-          <TransformGroup>
-            <ScaleTransform></ScaleTransform>            
-            <RotateTransform></RotateTransform>
-          </TransformGroup>
-        </Border.RenderTransform>
+    <Border  Name="element"
+             Margin="3"
+             Background="LightGoldenrodYellow"
+             BorderBrush="DarkBlue"
+             BorderThickness="2"
+             CornerRadius="5">
+      <Border.RenderTransform>
+        <TransformGroup>
+          <ScaleTransform></ScaleTransform>
+          <RotateTransform></RotateTransform>
+        </TransformGroup>
+      </Border.RenderTransform>
       <FlowDocumentScrollViewer IsToolBarVisible="True">
         <FlowDocument>
 
           <Paragraph xml:space="preserve">The <Italic>foof</Italic> feature is indispensable. You can configure the foof feature using the Foof Options dialog box.</Paragraph>
           <BlockUIContainer>
-            <Button HorizontalAlignment="Left" Padding="5">Open Foof Options</Button>
+            <Button HorizontalAlignment="Left"
+                    Padding="5">Open Foof Options</Button>
           </BlockUIContainer>
 
 
@@ -77,9 +105,9 @@
               <TableColumn Width="*"></TableColumn>
             </Table.Columns>
 
-            <TableRowGroup  >
-              <TableRow FontWeight="Bold" >
-                <TableCell >
+            <TableRowGroup>
+              <TableRow FontWeight="Bold">
+                <TableCell>
                   <Paragraph>Rank</Paragraph>
                 </TableCell>
                 <TableCell>
@@ -205,5 +233,5 @@
       </FlowDocumentScrollViewer>
     </Border>
 
-    </Grid>
+  </Grid>
 </Window>

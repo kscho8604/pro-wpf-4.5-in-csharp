@@ -1,4 +1,4 @@
-namespace Microsoft.Samples.PerFrameAnimations
+namespace Microsoft.Samples.PerFrameAnimations.ParticleEffectExample
 {
     using System;
     using System.Windows; //uielement
@@ -11,11 +11,11 @@ namespace Microsoft.Samples.PerFrameAnimations
 
         private DateTime _lastTime;
         private double _deltaTime;
-        private double _timerInterval = -1; 
+        private double _timerInterval = -1;
         #endregion
 
         #region Properties
-        
+
         public double TimerInterval
         {
             get
@@ -47,7 +47,7 @@ namespace Microsoft.Samples.PerFrameAnimations
         #endregion
 
         #region Events
-        public event EventHandler TimerFired; 
+        public event EventHandler TimerFired;
         #endregion
 
         #region Constructors
@@ -55,51 +55,51 @@ namespace Microsoft.Samples.PerFrameAnimations
         {
 
             _lastTime = DateTime.Now;
-        } 
+        }
         #endregion
 
         public double Update()
         {
-        
-            
+
+
             DateTime currentTime = DateTime.Now;
 
-                
+
             //get the difference in time
             TimeSpan diffTime = currentTime - _lastTime;
             _deltaTime = diffTime.TotalSeconds;
-            
 
 
-                //does the user want a callback on regular intervals?
-                if (_timerInterval > 0.0)
+
+            //does the user want a callback on regular intervals?
+            if (_timerInterval > 0.0)
+            {
+
+                /*
+                //compute the intervals for this and previous update
+                int currInterval = (int)(currentTime / TimeSpan.FromSeconds(_timerInterval));
+                int prevInterval = (int)(_lastTime / TimeSpan.FromSeconds(_timerInterval));
+
+                //has the interval changed since last update?
+                if (currInterval != prevInterval)
                 {
-                    
-                    /*
-                    //compute the intervals for this and previous update
-                    int currInterval = (int)(currentTime / TimeSpan.FromSeconds(_timerInterval));
-                    int prevInterval = (int)(_lastTime / TimeSpan.FromSeconds(_timerInterval));
+                    //fire interval event
+                    //note that this will only be called once per frame at most
+                    // so if they interval is too small, you wont get 2+ fires per frame
+                    TimerFired(this, null);
+                } */
 
-                    //has the interval changed since last update?
-                    if (currInterval != prevInterval)
-                    {
-                        //fire interval event
-                        //note that this will only be called once per frame at most
-                        // so if they interval is too small, you wont get 2+ fires per frame
-                        TimerFired(this, null);
-                    } */
-                    
-                    if (currentTime != _lastTime)
-                    {
-                        TimerFired(this, null);
-                    }
-                   
+                if (currentTime != _lastTime)
+                {
+                    TimerFired(this, null);
                 }
-                
+
+            }
+
 
             //cycle old time
             _lastTime = currentTime;
-            
+
             return _deltaTime;
         }
     }
