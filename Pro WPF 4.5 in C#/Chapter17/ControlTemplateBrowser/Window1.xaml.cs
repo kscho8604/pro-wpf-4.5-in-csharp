@@ -29,7 +29,7 @@ namespace ControlTemplateBrowser
         }
 
         private void Window_Loaded(object sender, EventArgs e)
-        {                    
+        {
             Type controlType = typeof(Control);
             List<Type> derivedTypes = new List<Type>();
 
@@ -43,7 +43,7 @@ namespace ControlTemplateBrowser
                     derivedTypes.Add(type);
                 }
             }
-            
+
             // Sort the types by type name.
             derivedTypes.Sort(new TypeComparer());
 
@@ -52,19 +52,19 @@ namespace ControlTemplateBrowser
         }
 
         private void lstTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {            
+        {
             try
             {
                 // Get the selected type.
-                Type type = (Type)lstTypes.SelectedItem;                                            
+                Type type = (Type)lstTypes.SelectedItem;
 
                 // Instantiate the type.
                 ConstructorInfo info = type.GetConstructor(System.Type.EmptyTypes);
                 Control control = (Control)info.Invoke(null);
-                                
+
                 Window win = control as Window;
                 if (win != null)
-                {                    
+                {
                     // Create the window (but keep it minimized).
                     win.WindowState = System.Windows.WindowState.Minimized;
                     win.ShowInTaskbar = false;
@@ -73,8 +73,9 @@ namespace ControlTemplateBrowser
                 else
                 {
                     // Add it to the grid (but keep it hidden).
-                    control.Visibility = Visibility.Collapsed;
-                    grid.Children.Add(control);
+                    //control.Visibility = Visibility.Collapsed;
+                    grid0.Children.Clear();
+                    grid0.Children.Add(control);
                 }
 
                 // Get the template.
@@ -89,7 +90,7 @@ namespace ControlTemplateBrowser
 
                 // Display the template.
                 txtTemplate.Text = sb.ToString();
-                
+
                 // Remove the control from the grid.
                 if (win != null)
                 {
@@ -97,7 +98,7 @@ namespace ControlTemplateBrowser
                 }
                 else
                 {
-                    grid.Children.Remove(control);
+                    //grid.Children.Remove(control);
                 }
             }
             catch (Exception err)

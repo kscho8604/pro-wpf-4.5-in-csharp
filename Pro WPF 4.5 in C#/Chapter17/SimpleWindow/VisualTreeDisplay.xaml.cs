@@ -30,14 +30,15 @@ namespace SimpleWindow
             treeElements.Items.Clear();
 
             // Start processing elements, begin at the root.
-            ProcessElement(element, null);            
+            ProcessElement(element, null);
         }
 
         private void ProcessElement(DependencyObject element, TreeViewItem previousItem)
         {
             // Create a TreeViewItem for the current element.
             TreeViewItem item = new TreeViewItem();
-            item.Header = element.GetType().Name;
+            item.Header = element.GetType().Name + '[' + element.GetType().FullName + ']';
+
             item.IsExpanded = true;
 
             // Check whether this item should be added to the root of the tree
@@ -57,6 +58,6 @@ namespace SimpleWindow
                 // Process each contained element recursively.
                 ProcessElement(VisualTreeHelper.GetChild(element, i), item);
             }
-        }       
+        }
     }
 }

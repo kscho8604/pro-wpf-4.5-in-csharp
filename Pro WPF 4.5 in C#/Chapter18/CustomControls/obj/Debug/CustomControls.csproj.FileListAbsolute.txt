@@ -15,3 +15,5 @@ D:\Code\Pro WPF\Chapter18\CustomControls\obj\Debug\CustomControls.Properties.Res
 D:\Code\Pro WPF\Chapter18\CustomControls\obj\Debug\CustomControls.csproj.GenerateResource.Cache
 D:\Code\Pro WPF\Chapter18\CustomControls\obj\Debug\CustomControls.dll
 D:\Code\Pro WPF\Chapter18\CustomControls\obj\Debug\CustomControls.pdb
+C:\Users\LG\Sources\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter18\CustomControls\obj\Debug\CustomControls.dll
+C:\Users\LG\Sources\repos\pro-wpf-4.5-in-csharp\Pro WPF 4.5 in C#\Chapter18\CustomControls\obj\Debug\CustomControls.pdb
